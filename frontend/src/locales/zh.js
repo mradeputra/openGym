@@ -556,4 +556,13 @@ export default {
   '{0} sets of {1} — time to add weight or move to a harder variation.': '{0} 组 × {1} 次——该加重量或换更难的变式了。',
   '{0} per side': '每侧 {0} 次',
   'You still log the total: {0} is {1} per side.': '你记录的仍然是总数：{0} 表示每侧 {1} 次。',
+  // --- coach ---
+  'Coach': '教练',
+  'Set variance — targets not met consistently': '组间波动 —— 目标未稳定达成',
+  'Reps dropped once — repeat this weight next week': '次数下滑一次 —— 下周重复这个重量',
+  'Reps dropped two sessions running — deload 10 %': '次数连续两次训练下滑 —— 减量 10 %',
+  'Reps dropped three sessions running — evaluate the plan': '次数连续三次训练下滑 —— 评估计划',
+  'Plateau — try an intensity technique': '平台期 —— 尝试强度技巧',
+  'Plateau — substitute to a variation': '平台期 —— 换用变式动作',
+  'Plateau — take a full deload week': '平台期 —— 安排一整周减量',
 }

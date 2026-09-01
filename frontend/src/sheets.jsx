@@ -19,6 +19,7 @@ import { parseImport, mergeImport } from './lib/import-csv.js'
 import { buildPlanBundle, parsePlan, mergePlan, printPlan } from './lib/plan-share.js'
 import { estimate1RM, best1RM, is1RMRecord, REP_CAP } from './lib/onerm.js'
 import { nextPrescription, applyPrescription, policyFor, defaultIncrement, POLICIES_FOR, POLICY_NAME, POLICY_DESC, MAX_BW_SETS } from './lib/progression.js'
+import { coachHints } from './lib/coach.js'
 import { MOBILE, shareExport } from './lib/mobile.js'
 
 const S = () => useStore.getState().S
@@ -915,7 +916,7 @@ function WorkoutComplete({ close }) {
 }
 export const workoutCompleteSheet = () => ui().openSheet(close => <WorkoutComplete close={close} />, { kind: 'center' })
 
-function FinishSummary({ w, prs, e1prs = [], close }) {
+function FinishSummary({ w, prs, e1prs = [], hints = [], close }) {
   const st = useStore(s => s.S)
   return <div style={{ textAlign: 'center', padding: '8px 0' }}>
     <div style={{ fontSize: 44, display: 'flex', justifyContent: 'center', color: 'var(--acc)' }}><Icon name="trophy" /></div>
@@ -932,6 +933,18 @@ function FinishSummary({ w, prs, e1prs = [], close }) {
     </div>}
     <h4 className="sec" style={{ textAlign: 'left' }}>{t('What you just trained')}</h4>
     <BodyMap load={loadOfWorkouts([w])} body={st.body} />
+    {hints.length > 0 && <>
+      <h4 className="sec" style={{ textAlign: 'left' }}>{t('Coach')}</h4>
+      {hints.map(h => (
+        <div key={h.exerciseId + h.ruleId} className="card" style={{ textAlign: 'left', marginBottom: 10 }}>
+          <div className="row between" style={{ marginBottom: 6 }}>
+            <span className="tt capitalize">{(EXIDX[h.exerciseId] || {}).n || h.exerciseId}</span>
+            <span className="tag acc nocap">{t(h.messageKey)}</span>
+          </div>
+          {h.reasoning.length > 0 && <div className="small dim" style={{ marginBottom: 4 }}>{t(h.reasoning[0], ...h.reasoning.slice(1))}</div>}
+        </div>
+      ))}
+    </>}
     <div style={{ height: 14 }} />
     <Button variant="primary" onClick={() => { close(); nav('/home') }}>{t('Nice!')}</Button>
   </div>
@@ -978,5 +991,8 @@ function doFinishWorkout() {
   })
   useUI.getState().stopRest()
   beep(snd(), 880, 0.15); beep(snd(), 1100, 0.15, 0.18); beep(snd(), 1320, 0.3, 0.36)
-  ui().openSheet(close => <FinishSummary w={w} prs={prs} e1prs={e1prs} close={close} />, { kind: 'center', locked: true })
+  // Coach hints analyze the just-finished session, so it must already be in the
+  // history `coachHints` reads. `st` is the pre-update snapshot — append `w` to it.
+  const hints = coachHints({ ...st, workouts: [...(st.workouts || []), w] }, w)
+  ui().openSheet(close => <FinishSummary w={w} prs={prs} e1prs={e1prs} hints={hints} close={close} />, { kind: 'center', locked: true })
 }

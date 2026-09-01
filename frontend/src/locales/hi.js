@@ -556,4 +556,13 @@ export default {
   '{0} sets of {1} — time to add weight or move to a harder variation.': '{1} रेप्स के {0} सेट — अब वज़न बढ़ाने या किसी कठिन वैरिएशन पर जाने का समय।',
   '{0} per side': 'प्रति तरफ़ {0}',
   'You still log the total: {0} is {1} per side.': 'आप कुल ही दर्ज करते हैं: {0} यानी प्रति तरफ़ {1}।',
+  // --- coach ---
+  'Coach': 'कोच',
+  'Set variance — targets not met consistently': 'सेट विचरण — लक्ष्य लगातार पूरे नहीं हो रहे',
+  'Reps dropped once — repeat this weight next week': 'रेप्स एक बार गिरे — अगले हफ़्ते यही वज़न दोहराएँ',
+  'Reps dropped two sessions running — deload 10 %': 'रेप्स लगातार दो सेशन गिरे — 10 % डीलोड करें',
+  'Reps dropped three sessions running — evaluate the plan': 'रेप्स लगातार तीन सेशन गिरे — प्लान का मूल्यांकन करें',
+  'Plateau — try an intensity technique': 'पठार — इंटेंसिटी तकनीक आज़माएँ',
+  'Plateau — substitute to a variation': 'पठार — किसी वैरिएशन पर स्विच करें',
+  'Plateau — take a full deload week': 'पठार — पूरा डीलोड हफ़्ता लें',
 }
