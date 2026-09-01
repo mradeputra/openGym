@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest'
 import { EXDB, byMuscle, sortByMusclePrimary } from './exercises.js'
+import { musclesOf } from './muscles.js'
+
+// primary = full weight from tg, via the production predicate
+const isPrimary = (e, slug) => musclesOf(e)[slug] >= 1
 
 // Muscle up trains the upper back (primary), plus biceps/chest as secondary
 // (muscles.js SECONDARY=0.4) — a single exercise that appears under both filters.
@@ -26,13 +30,22 @@ describe('byMuscle', () => {
   it('returns [] for an unknown slug', () => {
     expect(byMuscle(EXDB, 'not-a-muscle')).toEqual([])
   })
+
+  it('falls back to body part for a custom exercise with no tg', () => {
+    const custom = [{ id: 'c1', bp: 'chest', tg: '', sm: [] }]
+    expect(byMuscle(custom, 'chest').length).toBe(1)
+  })
+
+  it('returns [] for an empty list', () => {
+    expect(byMuscle([], 'chest')).toEqual([])
+  })
 })
 
 describe('sortByMusclePrimary', () => {
   it('puts primary exercises before secondary ones for a muscle', () => {
     const hits = byMuscle(EXDB, 'biceps')
     const sorted = sortByMusclePrimary(hits, 'biceps')
-    const prim = new Set(hits.filter(e => musclesPrimary(e, 'biceps')).map(e => e.id))
+    const prim = new Set(hits.filter(e => isPrimary(e, 'biceps')).map(e => e.id))
     // index of first primary < index of first secondary
     const firstSecondary = sorted.findIndex(e => !prim.has(e.id))
     const lastPrimary = sorted.findLastIndex(e => prim.has(e.id))
@@ -46,12 +59,3 @@ describe('sortByMusclePrimary', () => {
     expect(hits.map(e => e.id)).toEqual(before)
   })
 })
-
-// tiny local helper for the test (primary = full weight from tg)
-function musclesPrimary(e, slug) {
-  const m = {}
-  const add = (name, w) => { const s = name && name.toLowerCase().trim(); if (s) m[s] = Math.max(m[s] || 0, w) }
-  add(e.tg, 1)
-  ;(e.sm || []).forEach(x => add(x, 0.4))
-  return m[slug] >= 1
-}

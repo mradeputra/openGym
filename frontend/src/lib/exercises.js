@@ -1,5 +1,8 @@
 import { EXDB } from './exercises-data.js'
 import { t } from './i18n.js'
+// NOTE: importing musclesOf creates a cycle (muscles.js imports EXIDX from here). Both
+// modules only touch each other's bindings at call time — never add a top-level read of
+// the other module.
 import { musclesOf } from './muscles.js'
 
 export { EXDB }
