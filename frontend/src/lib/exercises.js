@@ -1,5 +1,9 @@
 import { EXDB } from './exercises-data.js'
 import { t } from './i18n.js'
+// NOTE: importing musclesOf creates a cycle (muscles.js imports EXIDX from here). Both
+// modules only touch each other's bindings at call time — never add a top-level read of
+// the other module.
+import { musclesOf } from './muscles.js'
 
 export { EXDB }
 export const EXIDX = {}
@@ -50,3 +54,17 @@ export const isBodyweightEq = idOrEx =>
 // down on the first `ex.n`.
 export const exOr = id => EXIDX[id] ||
   { id, n: t('Unknown exercise'), bp: '', tg: '', eq: '', sm: [], st: [], missing: true }
+
+// Exercises whose musclesOf map includes the slug — primary or secondary.
+export function byMuscle(list, slug) {
+  return list.filter(e => musclesOf(e)[slug] > 0)
+}
+
+// Sort: exercises training the muscle as PRIMARY (tg, full weight) first,
+// secondary after. Non-mutating.
+export function sortByMusclePrimary(list, slug) {
+  const prim = new Set()
+  list.forEach(e => { if (musclesOf(e)[slug] >= 1) prim.add(e.id) })
+  return [...list].sort((a, b) =>
+    (prim.has(b.id) ? 1 : 0) - (prim.has(a.id) ? 1 : 0))
+}

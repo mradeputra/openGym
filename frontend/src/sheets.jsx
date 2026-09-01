@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useStore } from './store/useStore.js'
 import { useUI } from './store/useUI.js'
-import { EXDB, EXIDX, BODYPARTS, isCardio, isBodyweightEq, allExercises, equipmentOf } from './lib/exercises.js'
+import { EXDB, EXIDX, BODYPARTS, isCardio, isBodyweightEq, allExercises, equipmentOf, byMuscle, sortByMusclePrimary } from './lib/exercises.js'
 import { fmtDate, fmtNum, fmtVol, fmtDur, durPart, todayISO, uid, exCount, DAYN, MONTHS_LONG, ACCENTS } from './lib/format.js'
 import { lastEntryFor, bestWeightFor, buildSets, effectiveRoutineId, workoutVolume, setsDone, setsDoneActive, lastBW, supersetUnits, unitOf, setLabel, defaultConfig, cleanupSg, modeOf, effortOf, isBw, isPerSide, sideReps } from './lib/history.js'
 import { beep, vibrate } from './lib/sound.js'
@@ -13,8 +13,8 @@ import Stepper from './components/Stepper.jsx'
 import Icon from './components/Icon.jsx'
 import { Button, Slider, Switch, Segmented, SelectRow, Row } from './components/ui.jsx'
 import { glyphOf, GLYPH_GROUPS, DEFAULT_GLYPH } from './lib/glyphs.js'
-import BodyMap from './components/BodyMap.jsx'
-import { loadOfWorkouts } from './lib/muscles.js'
+import BodyMap, { BodyMapLegend } from './components/BodyMap.jsx'
+import { loadOfWorkouts, MUSCLE_NAME } from './lib/muscles.js'
 import { parseImport, mergeImport } from './lib/import-csv.js'
 import { buildPlanBundle, parsePlan, mergePlan, printPlan } from './lib/plan-share.js'
 import { estimate1RM, best1RM, is1RMRecord, REP_CAP } from './lib/onerm.js'
@@ -414,6 +414,7 @@ function ExercisePicker({ onPick, close }) {
   const [q, setQ] = useState('')
   const [bp, setBp] = useState('')          // '' = all, '★' = chosen, else a body part
   const [eq, setEq] = useState('')          // '' = any equipment
+  const [muscle, setMuscle] = useState(null) // null = all, else a muscle slug
   const [shown, setShown] = useState(50)
   const ql = q.toLowerCase().trim()
   const all = allExercises(st)
@@ -421,6 +422,7 @@ function ExercisePicker({ onPick, close }) {
     (bp === '★' ? usage[e.id] : (!bp || e.bp === bp)) &&
     (!ql || e.n.toLowerCase().includes(ql) || e.tg.includes(ql) || e.eq.includes(ql) || (e.desc || '').toLowerCase().includes(ql)))
   if (bp === '★') base = [...base].sort((a, b) => (usage[b.id] - usage[a.id]) || (a.n < b.n ? -1 : 1))
+  if (muscle) base = sortByMusclePrimary(byMuscle(base, muscle), muscle)
   const eqOpts = equipmentOf(base)
   // Drop the equipment filter if the search narrowed it away, so you never hit a dead end.
   const eqOn = eqOpts.includes(eq) ? eq : ''
@@ -439,6 +441,17 @@ function ExercisePicker({ onPick, close }) {
       <button className={'chip nocap' + (!eqOn ? ' on' : '')} onClick={() => { setEq(''); setShown(50) }}>{t('Any equipment')}</button>
       {eqOpts.map(x => <button key={x} className={'chip' + (eqOn === x ? ' on' : '')} onClick={() => { setEq(x); setShown(50) }}>{t(x)}</button>)}
     </div>}
+    <div className="sect-b" style={{ margin: '6px 0 10px' }}>
+      <Button size="sm" variant={muscle ? 'tinted' : 'ghost'} icon="figureStrength"
+        onClick={() => setMuscle(muscle ? null : 'chest')}>
+        {muscle ? t('By muscle: {0}', t(MUSCLE_NAME[muscle])) : t('Filter by muscle')}
+      </Button>
+    </div>
+    {muscle && <>
+      <BodyMap className="tappable" load={{}} body={st.body} selected={muscle}
+        onMuscle={m => { setMuscle(s => (s === m ? null : m)); setShown(50) }} />
+      <BodyMapLegend />
+    </>}
     <div className="list">
       {bp !== '★' && <div className="item" onClick={() => customExSheet(null, ex => onPick(ex), q.trim())}>
         <div className="thumb thumb-x"><Icon name="sparkles" /></div>

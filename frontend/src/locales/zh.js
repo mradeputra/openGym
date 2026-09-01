@@ -391,6 +391,8 @@ export default {
   'Hip flexors': '髋屈肌',
   'Calves': '小腿',
   'Shins': '胫前肌',
+  'Filter by muscle': '按肌肉筛选',
+  'By muscle: {0}': '按肌肉：{0}',
   // --- import from another app ---
   'Import from another app': '从其他应用导入',
   'FitNotes, Strong, Hevy — or body weight from Apple Health': 'FitNotes、Strong、Hevy — 或来自 Apple 健康的体重',

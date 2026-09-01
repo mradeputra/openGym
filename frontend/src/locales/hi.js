@@ -391,6 +391,8 @@ export default {
   'Hip flexors': 'हिप फ्लेक्सर',
   'Calves': 'पिंडली',
   'Shins': 'पिंडली की हड्डी',
+  'Filter by muscle': 'मांसपेशी द्वारा फ़िल्टर करें',
+  'By muscle: {0}': 'मांसपेशी द्वारा: {0}',
   // --- import from another app ---
   'Import from another app': 'दूसरे ऐप से आयात करें',
   'FitNotes, Strong, Hevy — or body weight from Apple Health': 'FitNotes, Strong, Hevy — या Apple Health से वज़न',

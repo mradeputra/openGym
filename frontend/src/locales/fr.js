@@ -391,6 +391,8 @@ export default {
   'Hip flexors': 'Fléchisseurs de hanche',
   'Calves': 'Mollets',
   'Shins': 'Tibiaux',
+  'Filter by muscle': 'Filtrer par muscle',
+  'By muscle: {0}': 'Par muscle : {0}',
   // --- import from another app ---
   'Import from another app': 'Importer depuis une autre app',
   'FitNotes, Strong, Hevy — or body weight from Apple Health': 'FitNotes, Strong, Hevy — ou le poids depuis Apple Santé',

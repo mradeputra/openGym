@@ -391,6 +391,8 @@ export default {
   'Hip flexors': 'Zginacze bioder',
   'Calves': 'Łydki',
   'Shins': 'Piszczele',
+  'Filter by muscle': 'Filtruj po mięśniu',
+  'By muscle: {0}': 'Według mięśnia: {0}',
   // --- import from another app ---
   'Import from another app': 'Importuj z innej aplikacji',
   'FitNotes, Strong, Hevy — or body weight from Apple Health': 'FitNotes, Strong, Hevy — albo masa ciała z Apple Health',

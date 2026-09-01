@@ -7,6 +7,9 @@
 // map can actually draw, via ALIAS below. Anything genuinely undrawable (hands,
 // ankles, "cardiovascular system") maps to null and is dropped rather than guessed at.
 
+// NOTE: importing EXIDX creates a cycle (exercises.js imports musclesOf from here). Both
+// modules only touch each other's bindings at call time — never add a top-level read of
+// the other module.
 import { EXIDX } from './exercises.js'
 
 // The muscles a map can shade, in head-to-toe order — also the order of any list

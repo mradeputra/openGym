@@ -409,6 +409,8 @@ export default {
   'Hip flexors': 'Hüftbeuger',
   'Calves': 'Waden',
   'Shins': 'Schienbein',
+  'Filter by muscle': 'Nach Muskel filtern',
+  'By muscle: {0}': 'Nach Muskel: {0}',
   // --- import from another app ---
   'Import from another app': 'Aus anderer App importieren',
   'FitNotes, Strong, Hevy — or body weight from Apple Health': 'FitNotes, Strong, Hevy — oder Körpergewicht aus Apple Health',
