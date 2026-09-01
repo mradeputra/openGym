@@ -556,4 +556,13 @@ export default {
   '{0} sets of {1} — time to add weight or move to a harder variation.': '{0} serie da {1} — è ora di aggiungere peso o passare a una variante più difficile.',
   '{0} per side': '{0} per lato',
   'You still log the total: {0} is {1} per side.': 'Registri sempre il totale: {0} sono {1} per lato.',
+  // --- coach ---
+  'Coach': 'Allenatore',
+  'Set variance — targets not met consistently': 'Variazione tra le serie — obiettivi non raggiunti in modo costante',
+  'Reps dropped once — repeat this weight next week': 'Ripetizioni calate una volta — ripeti questo peso la settimana prossima',
+  'Reps dropped two sessions running — deload 10 %': 'Ripetizioni calate due sessioni di fila — deload del 10 %',
+  'Reps dropped three sessions running — evaluate the plan': 'Ripetizioni calate tre sessioni di fila — valuta il piano',
+  'Plateau — try an intensity technique': 'Stallo — prova una tecnica di intensità',
+  'Plateau — substitute to a variation': 'Stallo — passa a una variazione',
+  'Plateau — take a full deload week': 'Stallo — prenditi una settimana di deload completo',
 }

@@ -556,4 +556,13 @@ export default {
   '{0} sets of {1} — time to add weight or move to a harder variation.': '{1}회 {0}세트 — 이제 무게를 올리거나 더 어려운 동작으로 넘어가세요.',
   '{0} per side': '한쪽당 {0}회',
   'You still log the total: {0} is {1} per side.': '기록은 그대로 합계로 합니다: {0}회는 한쪽당 {1}회입니다.',
+  // --- coach ---
+  'Coach': '코치',
+  'Set variance — targets not met consistently': '세트 변동 — 목표를 꾸준히 달성하지 못함',
+  'Reps dropped once — repeat this weight next week': '횟수가 한 번 줄었습니다 — 다음 주에 이 무게로 다시 하세요',
+  'Reps dropped two sessions running — deload 10 %': '횟수가 두 세션 연속 줄었습니다 — 10 % 델로드',
+  'Reps dropped three sessions running — evaluate the plan': '횟수가 세 세션 연속 줄었습니다 — 프로그램을 재평가하세요',
+  'Plateau — try an intensity technique': '정체기 — 강도 기법을 시도해 보세요',
+  'Plateau — substitute to a variation': '정체기 — 변형 동작으로 바꿔 보세요',
+  'Plateau — take a full deload week': '정체기 — 완전한 델로드 주를 가져가세요',
 }

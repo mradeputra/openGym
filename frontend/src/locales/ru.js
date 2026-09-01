@@ -556,4 +556,13 @@ export default {
   '{0} sets of {1} — time to add weight or move to a harder variation.': '{0} × {1} — пора добавить вес или перейти к более сложному варианту.',
   '{0} per side': '{0} на сторону',
   'You still log the total: {0} is {1} per side.': 'Ты по-прежнему записываешь общее число: {0} — это {1} на сторону.',
+  // --- coach ---
+  'Coach': 'Тренер',
+  'Set variance — targets not met consistently': 'Разброс по подходам — цели не достигаются стабильно',
+  'Reps dropped once — repeat this weight next week': 'Повторения упали один раз — повтори этот вес на следующей неделе',
+  'Reps dropped two sessions running — deload 10 %': 'Повторения падают две тренировки подряд — deload 10 %',
+  'Reps dropped three sessions running — evaluate the plan': 'Повторения падают три тренировки подряд — пересмотри план',
+  'Plateau — try an intensity technique': 'Плато — попробуй технику повышения интенсивности',
+  'Plateau — substitute to a variation': 'Плато — перейди на вариацию упражнения',
+  'Plateau — take a full deload week': 'Плато — возьми полную неделю deload',
 }
