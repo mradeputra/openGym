@@ -57,6 +57,8 @@ function detectSetVariance(last) {
 
 function detectRepDrop(sessions) {
   if (sessions.length < 2) return null
+  if (sessions[0].mode !== 'reps') return null   // rep counts only exist for reps mode
+  if (sessions.at(-1).ok) return null            // a session that met its target is not a drop
   // Compare each session's achieved min reps to the one before it.
   const lows = sessions.map(s => s.low)
   let drops = 0
@@ -85,7 +87,9 @@ function detectRepDrop(sessions) {
 function detectPlateau(sessions) {
   // A plateau = the same weight and same rep outcome over N sessions.
   if (sessions.length < 3) return null
+  if (sessions[0].mode !== 'reps') return null   // plateau reads reps (low), not timed holds
   const w = sessions[sessions.length - 1].weight
+  if (w <= 0) return null                        // bodyweight: no load to plateau on
   let n = 0
   for (let i = sessions.length - 1; i >= 0; i--) {
     const s = sessions[i]
@@ -93,11 +97,10 @@ function detectPlateau(sessions) {
     // same low-or-high? we treat "same weight, not ok, low unchanged" as stagnation
     n++
   }
-  // `n` includes the session just finished (the log already holds it); the plateau
-  // we act on is the run of identical sessions *before* it.
-  const prior = n - 1
-  if (prior < 3) return null
-  if (prior === 3) return { tier: 1, messageKey: 'Plateau — try an intensity technique', params: {}, suggestedAction: 'technique', reasoning: ['Same weight for {0} sessions — try rest-pause or a drop set.', prior] }
-  if (prior === 4) return { tier: 2, messageKey: 'Plateau — substitute to a variation', params: {}, suggestedAction: 'substitute', reasoning: ['Same weight for {0} sessions — swap to a variation working the same muscles.', prior] }
-  return { tier: 3, messageKey: 'Plateau — take a full deload week', params: {}, suggestedAction: 'full-deload', reasoning: ['Same weight for {0}+ sessions — a full deload week is due.', prior] }
+  // `n` is the run of identical sessions ending at the one just finished (the log
+  // already holds it) — the plateau the user is living through, not the one before it.
+  if (n < 3) return null
+  if (n === 3) return { tier: 1, messageKey: 'Plateau — try an intensity technique', params: {}, suggestedAction: 'technique', reasoning: ['Same weight for {0} sessions — try rest-pause or a drop set.', n] }
+  if (n === 4) return { tier: 2, messageKey: 'Plateau — substitute to a variation', params: {}, suggestedAction: 'substitute', reasoning: ['Same weight for {0} sessions — swap to a variation working the same muscles.', n] }
+  return { tier: 3, messageKey: 'Plateau — take a full deload week', params: {}, suggestedAction: 'full-deload', reasoning: ['Same weight for {0}+ sessions — a full deload week is due.', n] }
 }
