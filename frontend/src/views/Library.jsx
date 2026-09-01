@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { useStore } from '../store/useStore.js'
-import { EXDB, BODYPARTS, allExercises, equipmentOf } from '../lib/exercises.js'
+import { EXDB, BODYPARTS, allExercises, equipmentOf, byMuscle, sortByMusclePrimary } from '../lib/exercises.js'
 import { bestWeightFor } from '../lib/history.js'
 import { fmtNum } from '../lib/format.js'
 import { t } from '../lib/i18n.js'
+import { MUSCLE_NAME } from '../lib/muscles.js'
 import { Thumb } from '../components/Media.jsx'
+import BodyMap, { BodyMapLegend } from '../components/BodyMap.jsx'
 import { exerciseDetailSheet, addToRoutineSheet, customExSheet } from '../sheets.jsx'
 import Icon from '../components/Icon.jsx'
 import { Button } from '../components/ui.jsx'
@@ -14,9 +16,11 @@ export default function Library() {
   const [q, setQ] = useState('')
   const [bp, setBp] = useState('')
   const [eq, setEq] = useState('')
+  const [muscle, setMuscle] = useState(null)   // null = all, else a muscle slug
   const [shown, setShown] = useState(40)
   const ql = q.toLowerCase().trim()
-  const base = allExercises(S).filter(e => (!bp || e.bp === bp) && (!ql || e.n.toLowerCase().includes(ql) || e.tg.includes(ql) || e.eq.includes(ql) || (e.desc || '').toLowerCase().includes(ql)))
+  let base = allExercises(S).filter(e => (!bp || e.bp === bp) && (!ql || e.n.toLowerCase().includes(ql) || e.tg.includes(ql) || e.eq.includes(ql) || (e.desc || '').toLowerCase().includes(ql)))
+  if (muscle) base = sortByMusclePrimary(byMuscle(base, muscle), muscle)
   const eqOpts = equipmentOf(base)
   // Drop the equipment filter if the search narrowed it away, so you never hit a dead end.
   const eqOn = eqOpts.includes(eq) ? eq : ''
@@ -34,6 +38,17 @@ export default function Library() {
       <button className={'chip nocap' + (!eqOn ? ' on' : '')} onClick={() => { setEq(''); setShown(40) }}>{t('Any equipment')}</button>
       {eqOpts.map(x => <button key={x} className={'chip' + (eqOn === x ? ' on' : '')} onClick={() => { setEq(x); setShown(40) }}>{t(x)}</button>)}
     </div>}
+    <div className="sect-b" style={{ margin: '6px 0 10px' }}>
+      <Button size="sm" variant={muscle ? 'tinted' : 'ghost'} icon="figureStrength"
+        onClick={() => setMuscle(muscle ? null : 'chest')}>
+        {muscle ? t('By muscle: {0}', t(MUSCLE_NAME[muscle])) : t('Filter by muscle')}
+      </Button>
+    </div>
+    {muscle && <>
+      <BodyMap className="tappable" load={{}} body={S.body} selected={muscle}
+        onMuscle={m => { setMuscle(s => (s === m ? null : m)); setShown(40) }} />
+      <BodyMapLegend />
+    </>}
     <div className="list">
       <div className="item" onClick={() => customExSheet(null, ex => exerciseDetailSheet(ex), q.trim())}>
         <div className="thumb thumb-x"><Icon name="sparkles" /></div>
