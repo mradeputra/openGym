@@ -391,6 +391,8 @@ export default {
   'Hip flexors': 'Kalça fleksörleri',
   'Calves': 'Baldırlar',
   'Shins': 'İncik',
+  'Filter by muscle': 'Kaslara göre filtrele',
+  'By muscle: {0}': 'Kasa göre: {0}',
   // --- import from another app ---
   'Import from another app': 'Başka uygulamadan içe aktar',
   'FitNotes, Strong, Hevy — or body weight from Apple Health': 'FitNotes, Strong, Hevy — veya Apple Health\'ten vücut ağırlığı',

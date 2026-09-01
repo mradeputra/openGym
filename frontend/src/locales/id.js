@@ -409,6 +409,8 @@ export default {
   'Hip flexors': 'Fleksor pinggul',
   'Calves': 'Betis',
   'Shins': 'Tulang kering',
+  'Filter by muscle': 'Filter berdasarkan otot',
+  'By muscle: {0}': 'Berdasarkan otot: {0}',
   // --- import from another app ---
   'Import from another app': 'Impor dari aplikasi lain',
   'FitNotes, Strong, Hevy — or body weight from Apple Health': 'FitNotes, Strong, Hevy — atau berat badan dari Apple Health',

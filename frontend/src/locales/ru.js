@@ -391,6 +391,8 @@ export default {
   'Hip flexors': 'Сгибатели бедра',
   'Calves': 'Икры',
   'Shins': 'Голени',
+  'Filter by muscle': 'Фильтр по мышце',
+  'By muscle: {0}': 'По мышце: {0}',
   // --- import from another app ---
   'Import from another app': 'Импорт из другого приложения',
   'FitNotes, Strong, Hevy — or body weight from Apple Health': 'FitNotes, Strong, Hevy — или вес из Apple Health',
