@@ -573,4 +573,13 @@ export default {
   '{0} sets of {1} — time to add weight or move to a harder variation.': '{0} set dengan {1} — saatnya menambah beban atau pindah ke variasi yang lebih berat.',
   '{0} per side': '{0} per sisi',
   'You still log the total: {0} is {1} per side.': 'Anda tetap mencatat total: {0} adalah {1} per sisi.',
+  // --- coach ---
+  'Coach': 'Pelatih',
+  'Set variance — targets not met consistently': 'Variansi set — target belum tercapai secara konsisten',
+  'Reps dropped once — repeat this weight next week': 'Reps turun sekali — ulangi beban ini minggu depan',
+  'Reps dropped two sessions running — deload 10 %': 'Reps turun dua sesi beruntun — deload 10 %',
+  'Reps dropped three sessions running — evaluate the plan': 'Reps turun tiga sesi beruntun — evaluasi program',
+  'Plateau — try an intensity technique': 'Plateau — coba teknik intensitas',
+  'Plateau — substitute to a variation': 'Plateau — ganti ke variasi gerakan',
+  'Plateau — take a full deload week': 'Plateau — ambil minggu deload penuh',
 }

@@ -556,4 +556,13 @@ export default {
   '{0} sets of {1} — time to add weight or move to a harder variation.': '{1} tekrarlık {0} set — ağırlık ekleme ya da daha zor bir varyasyona geçme zamanı.',
   '{0} per side': 'Taraf başına {0}',
   'You still log the total: {0} is {1} per side.': 'Toplamı kaydetmeye devam ediyorsun: {0}, taraf başına {1} demek.',
+  // --- coach ---
+  'Coach': 'Antrenör',
+  'Set variance — targets not met consistently': 'Set farklılığı — hedefler tutarlı şekilde karşılanmıyor',
+  'Reps dropped once — repeat this weight next week': 'Tekrarlar bir kez düştü — bu ağırlığı gelecek hafta tekrarla',
+  'Reps dropped two sessions running — deload 10 %': 'Tekrarlar üst üste iki seans düştü — %10 deload',
+  'Reps dropped three sessions running — evaluate the plan': 'Tekrarlar üst üste üç seans düştü — planı değerlendir',
+  'Plateau — try an intensity technique': 'Plato — bir yoğunluk tekniği dene',
+  'Plateau — substitute to a variation': 'Plato — bir varyasyona geç',
+  'Plateau — take a full deload week': 'Plato — tam bir deload haftası geçir',
 }
