@@ -773,6 +773,18 @@ function WorkoutDetail({ w, close }) {
           <div className="ss">{e.sets.filter(s => s.done).map(s => setLabel(e.id, s, e.target)).join('  ·  ') || t('no sets')}</div></div>
       </div>
     })}
+    {w.hints && w.hints.length > 0 && <>
+      <h4 className="sec">{t('Coach')}</h4>
+      {w.hints.map(h => (
+        <div key={h.exerciseId + h.ruleId} className="card" style={{ textAlign: 'left', marginBottom: 10 }}>
+          <div className="row between" style={{ marginBottom: 6 }}>
+            <span className="tt capitalize">{(EXIDX[h.exerciseId] || {}).n || h.exerciseId}</span>
+            <span className="tag acc nocap">{t(h.messageKey)}</span>
+          </div>
+          {h.reasoning.length > 0 && <div className="small dim" style={{ marginBottom: 4 }}>{t(h.reasoning[0], ...h.reasoning.slice(1))}</div>}
+        </div>
+      ))}
+    </>}
     <Button variant="danger" onClick={() => confirmSheet({ title: t('Delete workout?'), message: t('This removes it from your history for good.'), confirmText: t('Delete'), danger: true, onConfirm: () => { update(s => { s.workouts = s.workouts.filter(x => x.id !== w.id) }); close(); toast(t('Workout deleted')) } })}>{t('Delete workout')}</Button>
   </>
 }
@@ -916,7 +928,7 @@ function WorkoutComplete({ close }) {
 }
 export const workoutCompleteSheet = () => ui().openSheet(close => <WorkoutComplete close={close} />, { kind: 'center' })
 
-function FinishSummary({ w, prs, e1prs = [], hints = [], close }) {
+function FinishSummary({ w, prs, e1prs = [], close }) {
   const st = useStore(s => s.S)
   return <div style={{ textAlign: 'center', padding: '8px 0' }}>
     <div style={{ fontSize: 44, display: 'flex', justifyContent: 'center', color: 'var(--acc)' }}><Icon name="trophy" /></div>
@@ -931,11 +943,21 @@ function FinishSummary({ w, prs, e1prs = [], hints = [], close }) {
       {prs.map(id => <div key={id} className="small accent capitalize row" style={{ gap: 5 }}><Icon name="trophy" style={{ fontSize: 13 }} />{t('New PR:')} {(EXIDX[id] || {}).n || id}</div>)}
       {e1prs.map(p => <div key={p.id} className="small accent capitalize row" style={{ gap: 5 }}><Icon name="chartLine" style={{ fontSize: 13 }} />{t('Best estimated 1RM:')} {(EXIDX[p.id] || {}).n || p.id} · {fmtNum(p.est)} {st.unit}</div>)}
     </div>}
-    <h4 className="sec" style={{ textAlign: 'left' }}>{t('What you just trained')}</h4>
-    <BodyMap load={loadOfWorkouts([w])} body={st.body} />
-    {hints.length > 0 && <>
-      <h4 className="sec" style={{ textAlign: 'left' }}>{t('Coach')}</h4>
-      {hints.map(h => (
+    <div style={{ height: 14 }} />
+    <Button variant="primary" icon="lightbulb" onClick={() => { close(); nav('/home'); coachSheet(w) }}>{t('Nice!')}</Button>
+  </div>
+}
+
+// Coach hints for a finished workout, shown as a separate bottom sheet after the
+// summary (keeps the summary short) and re-openable from the workout's history entry.
+function CoachSheet({ w, close }) {
+  const hints = w.hints || []
+  const st = useStore(s => s.S)
+  return <>
+    <h3>{t('Coach')}</h3>
+    {hints.length === 0
+      ? <div className="muted small" style={{ padding: '4px 2px 12px' }}>{t('No coach advice for this workout.')}</div>
+      : hints.map(h => (
         <div key={h.exerciseId + h.ruleId} className="card" style={{ textAlign: 'left', marginBottom: 10 }}>
           <div className="row between" style={{ marginBottom: 6 }}>
             <span className="tt capitalize">{(EXIDX[h.exerciseId] || {}).n || h.exerciseId}</span>
@@ -944,11 +966,9 @@ function FinishSummary({ w, prs, e1prs = [], hints = [], close }) {
           {h.reasoning.length > 0 && <div className="small dim" style={{ marginBottom: 4 }}>{t(h.reasoning[0], ...h.reasoning.slice(1))}</div>}
         </div>
       ))}
-    </>}
-    <div style={{ height: 14 }} />
-    <Button variant="primary" onClick={() => { close(); nav('/home') }}>{t('Nice!')}</Button>
-  </div>
+  </>
 }
+export const coachSheet = w => ui().openSheet(close => <CoachSheet w={w} close={close} />)
 export function finishWorkout() {
   const A = S().active
   if (!A) return
@@ -972,13 +992,18 @@ function doFinishWorkout() {
     const rec = is1RMRecord(st, e.id, e)
     if (rec && !prs.includes(e.id)) e1prs.push({ id: e.id, ...rec })
   })
+  // Coach hints analyze the just-finished session, so it must already be in the
+  // history `coachHints` reads. `st` is the pre-update snapshot — append `w` to it.
+  const hints = coachHints({ ...st, workouts: [...(st.workouts || []), w] }, w)
   const w = {
     id: A.id, d: A.d, start: A.start, end: Date.now(), routineId: A.routineId, name: A.name, bw: A.bw,
     // `target` (what the session prescribed) is kept alongside the sets: without it a
     // finished workout cannot say whether it hit its reps, and a timed session reads back
     // as "0 reps". It is what the progression engine works from.
     entries: A.entries.map(e => ({ id: e.id, sets: e.sets, topW: e.topW || null, target: e.target || null })).filter(e => e.sets.some(s => s.done)),
-    prs
+    prs,
+    // Coach hints are stored on the workout so they can be re-read later from History.
+    hints
   }
   w.vol = workoutVolume(w)
   update(s => {
@@ -991,8 +1016,5 @@ function doFinishWorkout() {
   })
   useUI.getState().stopRest()
   beep(snd(), 880, 0.15); beep(snd(), 1100, 0.15, 0.18); beep(snd(), 1320, 0.3, 0.36)
-  // Coach hints analyze the just-finished session, so it must already be in the
-  // history `coachHints` reads. `st` is the pre-update snapshot — append `w` to it.
-  const hints = coachHints({ ...st, workouts: [...(st.workouts || []), w] }, w)
-  ui().openSheet(close => <FinishSummary w={w} prs={prs} e1prs={e1prs} hints={hints} close={close} />, { kind: 'center', locked: true })
+  ui().openSheet(close => <FinishSummary w={w} prs={prs} e1prs={e1prs} close={close} />, { kind: 'center', locked: true })
 }
