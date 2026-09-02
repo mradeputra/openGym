@@ -992,20 +992,20 @@ function doFinishWorkout() {
     const rec = is1RMRecord(st, e.id, e)
     if (rec && !prs.includes(e.id)) e1prs.push({ id: e.id, ...rec })
   })
-  // Coach hints analyze the just-finished session, so it must already be in the
-  // history `coachHints` reads. `st` is the pre-update snapshot — append `w` to it.
-  const hints = coachHints({ ...st, workouts: [...(st.workouts || []), w] }, w)
   const w = {
     id: A.id, d: A.d, start: A.start, end: Date.now(), routineId: A.routineId, name: A.name, bw: A.bw,
     // `target` (what the session prescribed) is kept alongside the sets: without it a
     // finished workout cannot say whether it hit its reps, and a timed session reads back
     // as "0 reps". It is what the progression engine works from.
     entries: A.entries.map(e => ({ id: e.id, sets: e.sets, topW: e.topW || null, target: e.target || null })).filter(e => e.sets.some(s => s.done)),
-    prs,
-    // Coach hints are stored on the workout so they can be re-read later from History.
-    hints
+    prs
   }
   w.vol = workoutVolume(w)
+  // Coach hints analyze the just-finished session, so it must already be in the
+  // history `coachHints` reads. `st` is the pre-update snapshot — append `w` to it.
+  const hints = coachHints({ ...st, workouts: [...(st.workouts || []), w] }, w)
+  // Coach hints are stored on the workout so they can be re-read later from History.
+  w.hints = hints
   update(s => {
     w.entries.forEach(e => {
       const mx = Math.max(0, ...e.sets.filter(x => x.done).map(x => x.w || 0), e.topW || 0)
