@@ -9,6 +9,7 @@ import {
   generateAuthenticationOptions, verifyAuthenticationResponse
 } from '@simplewebauthn/server';
 import webpush from 'web-push';
+import { callAI } from './ai.js';
 
 const PORT = +(process.env.PORT || 3000);
 const DATA = process.env.DATA_DIR || '/data';
@@ -453,6 +454,22 @@ const routes = {
       });
     } else presence.delete(user.id);
     json(res, 200, { ok: true });
+  },
+
+  // AI-assisted custom exercise: plain-text description -> structured exercise metadata.
+  'POST /api/exercise/suggest': async (req, res) => {
+    let body = {};
+    try { body = await readBody(req); } catch (e) { return json(res, 400, { error: 'bad request' }); }
+    const { description, lang } = body;
+    if (!description || typeof description !== 'string') return json(res, 400, { error: 'description required' });
+    const system = 'You turn a plain-text exercise description into structured exercise metadata as JSON only. '
+      + 'Return exactly this shape: {"name": string, "bp": one of bodypart, "eq": equipment, "tg": muscle, "sm": [muscles], "st": [step strings]}. '
+      + 'No extra text outside the JSON.';
+    let r;
+    try { r = await callAI({ prompt: `Describe this exercise: ${description}`, lang, system, json: true }); }
+    catch (e) { return json(res, 502, { error: 'ai unreachable' }); }
+    if (!r.ok) return json(res, r.status || 500, { error: r.error || 'ai error' });
+    return json(res, 200, { exercise: r.data });
   },
 
   /* ---------- admin dashboard ---------- */
