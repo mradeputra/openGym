@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { useStore } from './store/useStore.js'
 import { useUI } from './store/useUI.js'
-import { EXDB, EXIDX, BODYPARTS, isCardio, isBodyweightEq, allExercises, equipmentOf, byMuscle, sortByMusclePrimary } from './lib/exercises.js'
+import { api } from './lib/api.js'
+import { EXDB, EXIDX, BODYPARTS, isCardio, isBodyweightEq, isKnownEquipment, allExercises, equipmentOf, byMuscle, sortByMusclePrimary } from './lib/exercises.js'
 import { fmtDate, fmtNum, fmtVol, fmtDur, durPart, todayISO, uid, exCount, DAYN, MONTHS_LONG, ACCENTS } from './lib/format.js'
 import { lastEntryFor, bestWeightFor, buildSets, effectiveRoutineId, workoutVolume, setsDone, setsDoneActive, lastBW, supersetUnits, unitOf, setLabel, defaultConfig, cleanupSg, modeOf, effortOf, isBw, isPerSide, sideReps } from './lib/history.js'
 import { beep, vibrate } from './lib/sound.js'
@@ -14,7 +15,7 @@ import Icon from './components/Icon.jsx'
 import { Button, Slider, Switch, Segmented, SelectRow, Row } from './components/ui.jsx'
 import { glyphOf, GLYPH_GROUPS, DEFAULT_GLYPH } from './lib/glyphs.js'
 import BodyMap, { BodyMapLegend } from './components/BodyMap.jsx'
-import { loadOfWorkouts, MUSCLE_NAME } from './lib/muscles.js'
+import { loadOfWorkouts, MUSCLE_NAME, normalizeMuscleName } from './lib/muscles.js'
 import { parseImport, mergeImport } from './lib/import-csv.js'
 import { buildPlanBundle, parsePlan, mergePlan, printPlan } from './lib/plan-share.js'
 import { estimate1RM, best1RM, is1RMRecord, REP_CAP } from './lib/onerm.js'
@@ -347,18 +348,54 @@ function CustomExForm({ existing, prefill, onDone, close }) {
   const [n, setN] = useState(existing ? existing.n : (prefill || ''))
   const [bp, setBp] = useState(existing ? existing.bp : '')
   const [desc, setDesc] = useState(existing ? (existing.desc || '') : '')
+  // AI-fill (issue): a suggestion from the model, always reviewed/edited before saving.
+  // Only enum-safe values survive the guardrail below, never raw model output.
+  const [aiFill, setAiFill] = useState(null)      // { name, bp, eq, tg, sm, st } or null
+  const [aiBusy, setAiBusy] = useState(false)
+  async function askAI() {
+    if (!n || !n.trim()) { toast(t('Describe the exercise first')); return }
+    setAiBusy(true)
+    try {
+      const r = await api('/api/exercise/suggest', { method: 'POST', body: JSON.stringify({ description: n.trim(), lang: getLang() }) })
+      const e = r.exercise || {}
+      // Guardrail: only accept valid enum values
+      const bpOk = BODYPARTS.includes(e.bp) ? e.bp : ''
+      const eqOk = isKnownEquipment(e.eq) ? e.eq : 'body weight'
+      const tgOk = normalizeMuscleName(e.tg)
+      const smOk = (Array.isArray(e.sm) ? e.sm : []).map(normalizeMuscleName).filter(Boolean)
+      const stOk = (Array.isArray(e.st) ? e.st : []).map(s => String(s).slice(0, 200)).slice(0, 8)
+      setAiFill({ name: String(e.name || n).slice(0, 80), bp: bpOk, eq: eqOk, tg: tgOk || '', sm: smOk, st: stOk })
+      if (!bpOk) toast(t('Couldn’t match a body part — pick one below'))
+    } catch (err) {
+      toast(err.message || t('AI is not available'))
+    } finally {
+      setAiBusy(false)
+    }
+  }
   const save = () => {
-    const name = n.trim()
+    // With an AI suggestion the user reviews and edits the preview (aiFill), so that is
+    // what gets saved; otherwise name/bp come from the manual fields. The preview and the
+    // manual fields are one form — this keeps the saved exercise exactly what is on screen.
+    const name = (aiFill ? aiFill.name || n : n).trim()
+    const body = aiFill ? aiFill.bp : bp
     if (!name) { toast(t('Give it a name')); return }
-    if (!bp) { toast(t('Pick a body part')); return }
+    if (!body) { toast(t('Pick a body part')); return }
     const dup = allExercises(S()).find(e => e.n.toLowerCase() === name.toLowerCase() && e.id !== (existing || {}).id)
     if (dup) { toast(t('“{0}” already exists', dup.n)); return }
     const d = desc.trim().slice(0, 1000)
     let id = existing && existing.id
-    if (existing) update(s => { const c = (s.customEx || []).find(x => x.id === id); if (c) { c.n = name; c.bp = bp; c.desc = d } })
+    if (existing) update(s => { const c = (s.customEx || []).find(x => x.id === id); if (c) { c.n = name; c.bp = body; c.desc = d } })
     else {
       id = 'c' + uid()
-      update(s => { (s.customEx = s.customEx || []).push({ id, n: name, bp, desc: d, tg: '', eq: 'custom', custom: true }) })
+      // Rich fields (eq/tg/sm/st) are stored only when the AI offered them — a manually
+      // created exercise keeps the legacy shape (tg:'' / eq:'custom') so old readers cope.
+      update(s => { (s.customEx = s.customEx || []).push({
+        id, n: name, bp: body, desc: d, custom: true,
+        ...(aiFill && aiFill.eq ? { eq: aiFill.eq } : { eq: 'custom' }),
+        ...(aiFill && aiFill.tg ? { tg: aiFill.tg } : { tg: '' }),
+        ...(aiFill && aiFill.sm.length ? { sm: aiFill.sm } : {}),
+        ...(aiFill && aiFill.st.length ? { st: aiFill.st } : {})
+      }) })
     }
     close()
     toast(existing ? t('Saved') : t('“{0}” created', name))
@@ -374,6 +411,21 @@ function CustomExForm({ existing, prefill, onDone, close }) {
     {bp === 'cardio' && <div className="small dim row" style={{ marginBottom: 10, gap: 5 }}><Icon name="figureRun" style={{ fontSize: 13 }} />{t('Cardio exercises log time + speed instead of weight × reps.')}</div>}
     <textarea className="input" rows={4} maxLength={1000} placeholder={t('Description (optional) — setup, cues, anything you want to remember')}
       value={desc} onChange={e => setDesc(e.target.value)} />
+    <div className="row" style={{ gap: 8, margin: '10px 0' }}>
+      <Button variant="tinted" icon="sparkles" disabled={aiBusy} onClick={askAI}>
+        {aiBusy ? t('Thinking…') : t('Fill with AI')}
+      </Button>
+    </div>
+    {aiFill && <>
+      <h4 className="sec">{t('AI suggestion — edit before saving')}</h4>
+      <input className="input" value={aiFill.name} onChange={e => setAiFill(x => ({ ...x, name: e.target.value }))} placeholder={t('Exercise name')} />
+      <div className="chips" style={{ margin: '12px 0' }}>
+        {BODYPARTS.map(b => <button key={b} className={'chip' + (aiFill.bp === b ? ' on' : '')} onClick={() => setAiFill(x => ({ ...x, bp: b }))}>{t(b)}</button>)}
+      </div>
+      {aiFill.eq && <div className="small dim" style={{ marginBottom: 10 }}>{t('Equipment')}: <b>{t(aiFill.eq)}</b></div>}
+      {aiFill.tg && <div className="small dim" style={{ marginBottom: 10 }}>{t('Target muscle')}: <b>{t(aiFill.tg)}</b></div>}
+      {aiFill.st.length > 0 && <ol className="steps-list">{aiFill.st.map((s, i) => <li key={i}>{s}</li>)}</ol>}
+    </>}
     <div style={{ height: 14 }} />
     <Button variant="primary" onClick={save}>{existing ? t('Save') : t('Create exercise')}</Button>
     {existing && <><div style={{ height: 8 }} /><Button variant="danger" icon="trash" onClick={() => { close(); deleteCustomEx(existing) }}>{t('Delete exercise')}</Button></>}
