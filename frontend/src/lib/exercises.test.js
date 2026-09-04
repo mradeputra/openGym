@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { EXDB, byMuscle, sortByMusclePrimary } from './exercises.js'
-import { musclesOf } from './muscles.js'
+import { EXDB, byMuscle, sortByMusclePrimary, isKnownEquipment } from './exercises.js'
+import { musclesOf, normalizeMuscleName } from './muscles.js'
 
 // primary = full weight from tg, via the production predicate
 const isPrimary = (e, slug) => musclesOf(e)[slug] >= 1
@@ -57,5 +57,20 @@ describe('sortByMusclePrimary', () => {
     const before = hits.map(e => e.id)
     sortByMusclePrimary(hits, 'chest')
     expect(hits.map(e => e.id)).toEqual(before)
+  })
+})
+
+describe('AI suggest guardrail helpers', () => {
+  it('isKnownEquipment accepts real equipment, rejects garbage', () => {
+    expect(isKnownEquipment('barbell')).toBe(true)
+    expect(isKnownEquipment('dumbbell')).toBe(true)
+    expect(isKnownEquipment('cable')).toBe(true)
+    expect(isKnownEquipment('quantum wibble')).toBe(false)
+  })
+  it('normalizeMuscleName maps alias spellings to a slug', () => {
+    expect(normalizeMuscleName('deltoids')).toBe('deltoids')
+    expect(normalizeMuscleName('Rear Deltoids')).toBe('deltoids')
+    expect(normalizeMuscleName('latissimus dorsi')).toBe('upper-back')
+    expect(normalizeMuscleName('not a muscle')).toBe(null)
   })
 })
