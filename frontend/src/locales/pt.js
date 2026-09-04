@@ -567,5 +567,12 @@ export default {
   'Plateau — take a full deload week': 'Platô — tira uma semana completa de deload',
   "Got it": "Entendi",
   "What to do next, per exercise": "O que fazer a seguir, por exercício",
-  "No coach advice for this workout.": "Sem conselhos do treinador para este treino."
+  "No coach advice for this workout.": "Sem conselhos do treinador para este treino.",
+  "Fill with AI": "Preencher com IA",
+  "Thinking…": "Pensando…",
+  "AI suggestion — edit before saving": "Sugestão de IA — edite antes de salvar",
+  "Target muscle": "Músculo alvo",
+  "Describe the exercise first": "Descreva o exercício primeiro",
+  "Couldn’t match a body part — pick one below": "Não foi possível identificar uma parte do corpo — escolha abaixo",
+  "AI is not available": "IA indisponível"
 }

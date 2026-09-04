@@ -567,5 +567,12 @@ export default {
   'Plateau — take a full deload week': 'Plato — tam bir deload haftası geçir',
   "Got it": "Anlaşıldı",
   "What to do next, per exercise": "Sıradaki adım, egzersiz başına",
-  "No coach advice for this workout.": "Bu antrenman için koç tavsiyesi yok."
+  "No coach advice for this workout.": "Bu antrenman için koç tavsiyesi yok.",
+  "Fill with AI": "AI ile doldur",
+  "Thinking…": "Düşünüyor…",
+  "AI suggestion — edit before saving": "AI önerisi — kaydetmeden önce düzenle",
+  "Target muscle": "Hedef kas",
+  "Describe the exercise first": "Önce egzersizi tanımlayın",
+  "Couldn’t match a body part — pick one below": "Vücut bölümü eşleşmedi — aşağıdan seçin",
+  "AI is not available": "AI kullanılamıyor"
 }

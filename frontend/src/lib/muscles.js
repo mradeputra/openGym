@@ -72,12 +72,21 @@ const BY_BODYPART = {
 
 const SECONDARY = 0.4   // a supporting muscle counts this much against a primary
 
+// Guardrail for AI-suggested fields: map a free-text muscle name to its drawable slug, or null.
+// Also the shared spelling normaliser behind musclesOf (DRY). A canonical slug is accepted
+// as-is (the AI has no vocabulary, so it may hand back exactly the slug), otherwise it goes
+// through ALIAS, which collapses the dataset's free-text spellings onto the drawable slugs.
+export function normalizeMuscleName(name) {
+  const s = String(name || '').toLowerCase().trim()
+  return MUSCLES.includes(s) ? s : (ALIAS[s] ?? null)
+}
+
 /** Muscles one exercise trains: { slug: 0…1 }. */
 export function musclesOf(ex) {
   if (!ex) return {}
   const out = {}
   const add = (name, w) => {
-    const slug = ALIAS[String(name || '').toLowerCase().trim()]
+    const slug = normalizeMuscleName(name)
     if (slug) out[slug] = Math.max(out[slug] || 0, w)
   }
   add(ex.tg, 1)

@@ -55,6 +55,11 @@ export const isBodyweightEq = idOrEx =>
 export const exOr = id => EXIDX[id] ||
   { id, n: t('Unknown exercise'), bp: '', tg: '', eq: '', sm: [], st: [], missing: true }
 
+// Guardrail for AI-suggested fields: is this equipment real?
+export function isKnownEquipment(eq) {
+  return new Set(EXDB.map(e => e.eq)).has(eq)
+}
+
 // Exercises whose musclesOf map includes the slug — primary or secondary.
 export function byMuscle(list, slug) {
   return list.filter(e => musclesOf(e)[slug] > 0)

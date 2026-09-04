@@ -567,5 +567,12 @@ export default {
   'Plateau — take a full deload week': 'पठार — पूरा डीलोड हफ़्ता लें',
   "Got it": "समझ गया",
   "What to do next, per exercise": "अगला क्या करें, प्रति व्यायाम",
-  "No coach advice for this workout.": "इस वर्कआउट के लिए कोई कोच सलाह नहीं।"
+  "No coach advice for this workout.": "इस वर्कआउट के लिए कोई कोच सलाह नहीं।",
+  "Fill with AI": "AI से भरें",
+  "Thinking…": "सोच रहा है…",
+  "AI suggestion — edit before saving": "AI सुझाव — सहेजने से पहले संपादित करें",
+  "Target muscle": "लक्ष्य मांसपेशी",
+  "Describe the exercise first": "पहले व्यायाम का वर्णन करें",
+  "Couldn’t match a body part — pick one below": "शरीर का भाग नहीं मिला — नीचे चुनें",
+  "AI is not available": "AI उपलब्ध नहीं है"
 }
