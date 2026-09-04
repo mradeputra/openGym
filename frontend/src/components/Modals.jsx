@@ -49,14 +49,14 @@ function Sheet({ sheet }) {
     return (
       <div>
         <div className="mback" onClick={() => { if (!sheet.locked) close() }} />
-        <div className="center">{sheet.render(close)}</div>
+        <div className={'center' + (sheet.cls ? ' ' + sheet.cls : '')}>{sheet.render(close)}</div>
       </div>
     )
   }
   return (
     <div>
       <div className="mback" onClick={() => { if (!sheet.locked) close() }} />
-      <div className="sheet" ref={ref} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+      <div className={'sheet' + (sheet.cls ? ' ' + sheet.cls : '')} ref={ref} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
         <div className="grab" />
         {sheet.render(close)}
       </div>

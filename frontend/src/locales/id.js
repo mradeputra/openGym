@@ -583,4 +583,6 @@ export default {
   'Plateau — substitute to a variation': 'Plateau — ganti ke variasi gerakan',
   'Plateau — take a full deload week': 'Plateau — ambil minggu deload penuh',
   'No coach advice for this workout.': 'Tidak ada saran pelatih untuk latihan ini.',
+  "Got it": "Siap",
+  "What to do next, per exercise": "Langkah selanjutnya, per latihan"
 }

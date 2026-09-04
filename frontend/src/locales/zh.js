@@ -565,4 +565,7 @@ export default {
   'Plateau — try an intensity technique': '平台期 —— 尝试强度技巧',
   'Plateau — substitute to a variation': '平台期 —— 换用变式动作',
   'Plateau — take a full deload week': '平台期 —— 安排一整周减量',
+  "Got it": "明白了",
+  "What to do next, per exercise": "每个动作接下来怎么做",
+  "No coach advice for this workout.": "本次训练没有教练建议。"
 }

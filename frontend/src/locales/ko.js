@@ -565,4 +565,7 @@ export default {
   'Plateau — try an intensity technique': '정체기 — 강도 기법을 시도해 보세요',
   'Plateau — substitute to a variation': '정체기 — 변형 동작으로 바꿔 보세요',
   'Plateau — take a full deload week': '정체기 — 완전한 델로드 주를 가져가세요',
+  "Got it": "알겠어요",
+  "What to do next, per exercise": "운동별 다음 단계",
+  "No coach advice for this workout.": "이 운동에 대한 코치 조언이 없습니다."
 }

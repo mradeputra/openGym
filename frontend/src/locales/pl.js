@@ -565,4 +565,7 @@ export default {
   'Plateau — try an intensity technique': 'Płaskowyż — spróbuj techniki intensyfikacji',
   'Plateau — substitute to a variation': 'Płaskowyż — przejdź na wariant ćwiczenia',
   'Plateau — take a full deload week': 'Płaskowyż — zrób pełny tydzień deload',
+  "Got it": "Jasne",
+  "What to do next, per exercise": "Co dalej, dla każdego ćwiczenia",
+  "No coach advice for this workout.": "Brak porad trenera dla tego treningu."
 }

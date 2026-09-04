@@ -565,4 +565,7 @@ export default {
   'Plateau — try an intensity technique': 'Plato — bir yoğunluk tekniği dene',
   'Plateau — substitute to a variation': 'Plato — bir varyasyona geç',
   'Plateau — take a full deload week': 'Plato — tam bir deload haftası geçir',
+  "Got it": "Anlaşıldı",
+  "What to do next, per exercise": "Sıradaki adım, egzersiz başına",
+  "No coach advice for this workout.": "Bu antrenman için koç tavsiyesi yok."
 }
