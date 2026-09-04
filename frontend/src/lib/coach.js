@@ -40,12 +40,17 @@ export function evaluateEntry(S, entry) {
 
 function detectSetVariance(last) {
   if (last.mode !== 'reps' || !last.reps.length || last.ok) return null
-  const min = Math.min(...last.reps)
-  const max = Math.max(...last.reps)
+  // `readSession` maps an unchecked set to 0 reps (a workout can be finished early with
+  // sets left undone). Those aren't sets the user performed, so they carry no variance
+  // signal — drop them before measuring. A done reps set is always >= 1.
+  const reps = last.reps.filter(r => r > 0)
+  if (reps.length < 2) return null
+  const min = Math.min(...reps)
+  const max = Math.max(...reps)
   // A real variance pattern is a fade: every set a little worse than the one before
   // it (12-10-8). Ordinary scatter like 12-10-12 or 12-9-11 is not a set-variance
   // story — that belongs to the rep-drop / plateau rules instead.
-  const fades = last.reps.every((r, i) => i === 0 || r < last.reps[i - 1])
+  const fades = reps.every((r, i) => i === 0 || r < reps[i - 1])
   if (!fades || max - min < 2) return null   // e.g. 12-11-12 is normal variance, not a pattern
   return {
     messageKey: 'Set variance — targets not met consistently',
