@@ -38,6 +38,22 @@ describe('coachHints — set variance', () => {
     const hints = coachHints(S, w)
     expect(hints.find(h => h.ruleId === 'set-variance')).toBeFalsy()
   })
+  it('ignores an unchecked set from an early-finished workout (its 0 is not a real set)', () => {
+    // 3 sets done (12, 10, 8) + a 4th left unchecked (readSession maps it to 0 reps).
+    // The 0 must not enter the min/max — reasoning should measure the done sets only.
+    const S = hist(LIFT, [[40, 12, 12, 12], [40, 12, 12, 10, 8, null]])
+    const w = {
+      id: LIFT, d: '2026-02-01',
+      entries: [{
+        id: LIFT, target: { sets: 4, reps: 12, weight: 40 },
+        sets: [{ w: 40, r: 12, done: true }, { w: 40, r: 10, done: true }, { w: 40, r: 8, done: true }, { w: 40, r: 0, done: false }]
+      }]
+    }
+    const sv = coachHints(S, w).find(h => h.ruleId === 'set-variance')
+    expect(sv).toBeTruthy()
+    expect(sv.reasoning[1]).toBe(8)   // min of done sets (8), not the unchecked 0
+    expect(sv.reasoning[2]).toBe(12)  // max of done sets
+  })
 })
 
 describe('coachHints — rep drop tiered', () => {
