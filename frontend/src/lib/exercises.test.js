@@ -73,4 +73,9 @@ describe('AI suggest guardrail helpers', () => {
     expect(normalizeMuscleName('latissimus dorsi')).toBe('upper-back')
     expect(normalizeMuscleName('not a muscle')).toBe(null)
   })
+  it('normalizeMuscleName accepts canonical slugs as-is', () => {
+    expect(normalizeMuscleName('gluteal')).toBe('gluteal')
+    expect(normalizeMuscleName('hamstring')).toBe('hamstring')
+    expect(normalizeMuscleName('upper-back')).toBe('upper-back')
+  })
 })

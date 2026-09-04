@@ -460,8 +460,11 @@ const routes = {
   'POST /api/exercise/suggest': async (req, res) => {
     let body = {};
     try { body = await readBody(req); } catch (e) { return json(res, 400, { error: 'bad request' }); }
-    const { description, lang } = body;
-    if (!description || typeof description !== 'string') return json(res, 400, { error: 'description required' });
+    // Cap the description (the prompt it becomes is billed per token) and only forward a
+    // well-formed locale — a huge or odd lang string would otherwise ride along as prompt text.
+    const description = String(body.description || '').slice(0, 500);
+    if (!description) return json(res, 400, { error: 'description required' });
+    const lang = /^[a-z]{2}(-[A-Z]{2})?$/.test(body.lang) ? body.lang : undefined;
     const system = 'You turn a plain-text exercise description into structured exercise metadata as JSON only. '
       + 'Return exactly this shape: {"name": string, "bp": one of bodypart, "eq": equipment, "tg": muscle, "sm": [muscles], "st": [step strings]}. '
       + 'No extra text outside the JSON.';

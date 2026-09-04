@@ -367,6 +367,7 @@ function CustomExForm({ existing, prefill, onDone, close }) {
       setAiFill({ name: String(e.name || n).slice(0, 80), bp: bpOk, eq: eqOk, tg: tgOk || '', sm: smOk, st: stOk })
       if (!bpOk) toast(t('Couldn’t match a body part — pick one below'))
     } catch (err) {
+      setAiFill(null)
       toast(err.message || t('AI is not available'))
     } finally {
       setAiBusy(false)
@@ -411,11 +412,13 @@ function CustomExForm({ existing, prefill, onDone, close }) {
     {bp === 'cardio' && <div className="small dim row" style={{ marginBottom: 10, gap: 5 }}><Icon name="figureRun" style={{ fontSize: 13 }} />{t('Cardio exercises log time + speed instead of weight × reps.')}</div>}
     <textarea className="input" rows={4} maxLength={1000} placeholder={t('Description (optional) — setup, cues, anything you want to remember')}
       value={desc} onChange={e => setDesc(e.target.value)} />
-    <div className="row" style={{ gap: 8, margin: '10px 0' }}>
+    {/* AI fill is only offered when creating — the edit branch of save() would silently
+        discard the rich fields (eq/tg/sm/st), so an edit-mode button would be a dead end. */}
+    {!existing && <div className="row" style={{ gap: 8, margin: '10px 0' }}>
       <Button variant="tinted" icon="sparkles" disabled={aiBusy} onClick={askAI}>
         {aiBusy ? t('Thinking…') : t('Fill with AI')}
       </Button>
-    </div>
+    </div>}
     {aiFill && <>
       <h4 className="sec">{t('AI suggestion — edit before saving')}</h4>
       <input className="input" value={aiFill.name} onChange={e => setAiFill(x => ({ ...x, name: e.target.value }))} placeholder={t('Exercise name')} />
@@ -424,6 +427,11 @@ function CustomExForm({ existing, prefill, onDone, close }) {
       </div>
       {aiFill.eq && <div className="small dim" style={{ marginBottom: 10 }}>{t('Equipment')}: <b>{t(aiFill.eq)}</b></div>}
       {aiFill.tg && <div className="small dim" style={{ marginBottom: 10 }}>{t('Target muscle')}: <b>{t(aiFill.tg)}</b></div>}
+      {aiFill.sm.length > 0 && <div className="small dim" style={{ marginBottom: 10 }}>
+        {t('Also works')}: {aiFill.sm.map((m, i) => (
+          <span key={i}>{MUSCLE_NAME[m] ? t(MUSCLE_NAME[m]) : t(m)}{i < aiFill.sm.length - 1 ? ', ' : ''}</span>
+        ))}
+      </div>}
       {aiFill.st.length > 0 && <ol className="steps-list">{aiFill.st.map((s, i) => <li key={i}>{s}</li>)}</ol>}
     </>}
     <div style={{ height: 14 }} />

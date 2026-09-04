@@ -2,7 +2,11 @@ import { describe, it, expect, vi, afterEach } from 'vitest'
 
 // Env vars set before importing the module.
 const OLD = { ...process.env }
-afterEach(() => { vi.unstubAllGlobals(); Object.assign(process.env, OLD) })
+afterEach(() => {
+  vi.unstubAllGlobals()
+  for (const k of Object.keys(process.env)) if (!(k in OLD) && k.startsWith('AI_')) delete process.env[k]
+  Object.assign(process.env, OLD)
+})
 
 async function freshCallAI() {
   vi.resetModules()
