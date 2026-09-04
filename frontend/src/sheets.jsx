@@ -948,27 +948,40 @@ function FinishSummary({ w, prs, e1prs = [], close }) {
   </div>
 }
 
-// Coach hints for a finished workout, shown as a separate bottom sheet after the
-// summary (keeps the summary short) and re-openable from the workout's history entry.
+// Coach hints for a finished workout — a centre dialog (not a bottom sheet) so it reads
+// as the coach talking to you after the session, and re-openable from the workout's
+// history entry. Rows are an inset list with hairlines, the app's list language — not a
+// stack of cards. The tag tints by severity: action = accent, warning = orange.
+const SEV_CLS = { action: 'tag acc nocap', warning: 'tag warn nocap', info: 'tag nocap' }
+
 function CoachSheet({ w, close }) {
   const hints = w.hints || []
-  const st = useStore(s => s.S)
   return <>
-    <h3>{t('Coach')}</h3>
+    <div className="coach-head">
+      <span className="coach-ic"><Icon name="lightbulb" style={{ fontSize: 19 }} /></span>
+      <div>
+        <h3>{t('Coach')}</h3>
+        <div className="coach-sub">{t('What to do next, per exercise')}</div>
+      </div>
+    </div>
     {hints.length === 0
-      ? <div className="muted small" style={{ padding: '4px 2px 12px' }}>{t('No coach advice for this workout.')}</div>
-      : hints.map(h => (
-        <div key={h.exerciseId + h.ruleId} className="card" style={{ textAlign: 'left', marginBottom: 10 }}>
-          <div className="row between" style={{ marginBottom: 6 }}>
-            <span className="tt capitalize">{(EXIDX[h.exerciseId] || {}).n || h.exerciseId}</span>
-            <span className="tag acc nocap">{t(h.messageKey)}</span>
-          </div>
-          {h.reasoning.length > 0 && <div className="small dim" style={{ marginBottom: 4 }}>{t(h.reasoning[0], ...h.reasoning.slice(1))}</div>}
-        </div>
-      ))}
+      ? <div className="muted small" style={{ padding: '16px 2px 4px' }}>{t('No coach advice for this workout.')}</div>
+      : <div className="sect-b coach-list">
+          {hints.map(h => (
+            <div key={h.exerciseId + h.ruleId} className="coach-row">
+              <div className="row between" style={{ alignItems: 'flex-start' }}>
+                <span className="coach-ex capitalize">{(EXIDX[h.exerciseId] || {}).n || h.exerciseId}</span>
+                <span className={SEV_CLS[h.severity] || 'tag nocap'}>{t(h.messageKey)}</span>
+              </div>
+              {h.reasoning.length > 0 && <div className="coach-reason">{t(h.reasoning[0], ...h.reasoning.slice(1))}</div>}
+            </div>
+          ))}
+        </div>}
+    <div style={{ height: 18 }} />
+    <Button variant="primary" onClick={close}>{t('Got it')}</Button>
   </>
 }
-export const coachSheet = w => ui().openSheet(close => <CoachSheet w={w} close={close} />)
+export const coachSheet = w => ui().openSheet(close => <CoachSheet w={w} close={close} />, { kind: 'center', cls: 'coach' })
 export function finishWorkout() {
   const A = S().active
   if (!A) return

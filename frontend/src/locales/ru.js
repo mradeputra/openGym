@@ -565,4 +565,7 @@ export default {
   'Plateau — try an intensity technique': 'Плато — попробуй технику повышения интенсивности',
   'Plateau — substitute to a variation': 'Плато — перейди на вариацию упражнения',
   'Plateau — take a full deload week': 'Плато — возьми полную неделю deload',
+  "Got it": "Понятно",
+  "What to do next, per exercise": "Что делать дальше, по упражнениям",
+  "No coach advice for this workout.": "Нет советов тренера для этой тренировки."
 }

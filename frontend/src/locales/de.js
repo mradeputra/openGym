@@ -582,4 +582,7 @@ export default {
   'Plateau — try an intensity technique': 'Plateau — Intensitätstechnik ausprobieren',
   'Plateau — substitute to a variation': 'Plateau — auf eine Variation wechseln',
   'Plateau — take a full deload week': 'Plateau — eine komplette Deload-Woche einlegen',
+  "Got it": "Verstanden",
+  "What to do next, per exercise": "Was als Nächstes, pro Übung",
+  "No coach advice for this workout.": "Kein Coaching-Hinweis für dieses Training."
 }

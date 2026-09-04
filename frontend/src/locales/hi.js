@@ -565,4 +565,7 @@ export default {
   'Plateau — try an intensity technique': 'पठार — इंटेंसिटी तकनीक आज़माएँ',
   'Plateau — substitute to a variation': 'पठार — किसी वैरिएशन पर स्विच करें',
   'Plateau — take a full deload week': 'पठार — पूरा डीलोड हफ़्ता लें',
+  "Got it": "समझ गया",
+  "What to do next, per exercise": "अगला क्या करें, प्रति व्यायाम",
+  "No coach advice for this workout.": "इस वर्कआउट के लिए कोई कोच सलाह नहीं।"
 }
