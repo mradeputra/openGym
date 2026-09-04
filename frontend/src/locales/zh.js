@@ -567,5 +567,12 @@ export default {
   'Plateau — take a full deload week': '平台期 —— 安排一整周减量',
   "Got it": "明白了",
   "What to do next, per exercise": "每个动作接下来怎么做",
-  "No coach advice for this workout.": "本次训练没有教练建议。"
+  "No coach advice for this workout.": "本次训练没有教练建议。",
+  "Fill with AI": "用AI填写",
+  "Thinking…": "思考中…",
+  "AI suggestion — edit before saving": "AI建议 — 保存前请编辑",
+  "Target muscle": "目标肌肉",
+  "Describe the exercise first": "请先描述动作",
+  "Couldn’t match a body part — pick one below": "无法匹配身体部位 — 请在下方选择",
+  "AI is not available": "AI不可用"
 }

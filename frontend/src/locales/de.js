@@ -584,5 +584,12 @@ export default {
   'Plateau — take a full deload week': 'Plateau — eine komplette Deload-Woche einlegen',
   "Got it": "Verstanden",
   "What to do next, per exercise": "Was als Nächstes, pro Übung",
-  "No coach advice for this workout.": "Kein Coaching-Hinweis für dieses Training."
+  "No coach advice for this workout.": "Kein Coaching-Hinweis für dieses Training.",
+  "Fill with AI": "Mit KI ausfüllen",
+  "Thinking…": "Denkt…",
+  "AI suggestion — edit before saving": "KI-Vorschlag — vor dem Speichern bearbeiten",
+  "Target muscle": "Zielmuskel",
+  "Describe the exercise first": "Beschreibe zuerst die Übung",
+  "Couldn’t match a body part — pick one below": "Konnte keinen Körperteil zuordnen — wähle unten einen aus",
+  "AI is not available": "KI nicht verfügbar"
 }

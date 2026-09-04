@@ -584,5 +584,12 @@ export default {
   'Plateau — take a full deload week': 'Plateau — ambil minggu deload penuh',
   'No coach advice for this workout.': 'Tidak ada saran pelatih untuk latihan ini.',
   "Got it": "Siap",
-  "What to do next, per exercise": "Langkah selanjutnya, per latihan"
+  "What to do next, per exercise": "Langkah selanjutnya, per latihan",
+  "Fill with AI": "Isi dengan AI",
+  "Thinking…": "Memikirkan…",
+  "AI suggestion — edit before saving": "Saran AI — edit sebelum menyimpan",
+  "Target muscle": "Otot sasaran",
+  "Describe the exercise first": "Deskripsikan gerakannya dulu",
+  "Couldn’t match a body part — pick one below": "Tidak dapat mencocokkan bagian tubuh — pilih di bawah",
+  "AI is not available": "AI tidak tersedia"
 }

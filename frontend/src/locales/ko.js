@@ -567,5 +567,12 @@ export default {
   'Plateau — take a full deload week': '정체기 — 완전한 델로드 주를 가져가세요',
   "Got it": "알겠어요",
   "What to do next, per exercise": "운동별 다음 단계",
-  "No coach advice for this workout.": "이 운동에 대한 코치 조언이 없습니다."
+  "No coach advice for this workout.": "이 운동에 대한 코치 조언이 없습니다.",
+  "Fill with AI": "AI로 채우기",
+  "Thinking…": "생각하는 중…",
+  "AI suggestion — edit before saving": "AI 제안 — 저장 전에 수정하세요",
+  "Target muscle": "대상 근육",
+  "Describe the exercise first": "먼저 운동을 설명하세요",
+  "Couldn’t match a body part — pick one below": "신체 부위를 찾지 못했습니다 — 아래에서 선택하세요",
+  "AI is not available": "AI를 사용할 수 없습니다"
 }

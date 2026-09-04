@@ -567,5 +567,12 @@ export default {
   'Plateau — take a full deload week': 'Плато — возьми полную неделю deload',
   "Got it": "Понятно",
   "What to do next, per exercise": "Что делать дальше, по упражнениям",
-  "No coach advice for this workout.": "Нет советов тренера для этой тренировки."
+  "No coach advice for this workout.": "Нет советов тренера для этой тренировки.",
+  "Fill with AI": "Заполнить с ИИ",
+  "Thinking…": "Думаю…",
+  "AI suggestion — edit before saving": "Предложение ИИ — отредактируйте перед сохранением",
+  "Target muscle": "Целевая мышца",
+  "Describe the exercise first": "Сначала опишите упражнение",
+  "Couldn’t match a body part — pick one below": "Не удалось определить часть тела — выберите ниже",
+  "AI is not available": "ИИ недоступен"
 }
